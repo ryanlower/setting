@@ -8,14 +8,23 @@ import (
 
 // Load ...
 func Load(config interface{}) {
-	t := reflect.TypeOf(config).Elem()
+	// TODO, ensure config is struct
+
 	v := reflect.ValueOf(config).Elem()
+	t := v.Type()
 
-	for i := 0; i < t.NumField(); i++ {
-		field := t.Field(i)
-		value := v.FieldByName(field.Name)
+	loadStruct(t, v)
+}
 
-		set(field, value)
+func loadStruct(t reflect.Type, v reflect.Value) {
+	for i := 0; i < v.NumField(); i++ {
+		tt := t.Field(i)
+		vv := v.Field(i)
+		if vv.Kind() == reflect.Struct {
+			loadStruct(tt.Type, vv)
+		} else {
+			set(tt, vv)
+		}
 	}
 }
 
