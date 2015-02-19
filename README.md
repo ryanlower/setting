@@ -21,12 +21,17 @@ Both `env` and `default` are optional:
 ```go
 type Config struct {
   Name string `env:"NAME"`
-  City string `default:"San Francisco"`
+  Location struct {
+    City string `default:"San Francisco"`
+  }
 }
+
+config := new(Config)
+setting.Load(config)
 
 // `config.Name` will be the NAME environment variable value if
 // present, or the zero value if not
-// `config.City` will be "San Francisco"
+// `config.Location.City` will be "San Francisco"
 ```
 
 ### Limitations
